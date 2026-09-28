@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WILITO Barber Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0a0a0b; --bg2:#161616; --card:#1a1a1a; --card2:#1f1c16; --gold:#c9a24b; --gold2:#f0cf7e;
+  --text:#f4efe4; --muted:#9c968b; --line:#2a2a2a; --ok:#4caf6d; --warn:#e0b23d; --err:#e05a5a;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  box-sizing:border-box;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth;}
+body{margin:0;background:
+  radial-gradient(circle at 15% 0%, #201a0c 0%, transparent 45%),
+  radial-gradient(circle at 85% 10%, #17140a 0%, transparent 40%),
+  var(--bg);
+  color:var(--text);font-family:'Poppins',sans-serif;}
+h1,h2,h3,.brand{font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;}
+a{color:inherit;text-decoration:none;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px;}
+.polestrip{height:6px;width:100%;background:repeating-linear-gradient(45deg,#c9394a 0 14px,#f4efe4 14px 28px,var(--gold) 28px 42px);background-size:60px 60px;animation:poleslide 2.4s linear infinite;}
+@keyframes poleslide{to{background-position:60px 0;}}
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,11,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px);}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1100px;margin:0 auto;}
+.brand{font-size:30px;color:var(--gold2);text-shadow:0 0 18px rgba(240,207,126,.25);}
+.brand span{color:var(--text);}
+.navlinks{display:flex;gap:24px;font-size:14px;color:var(--muted);flex-wrap:wrap;}
+.navlinks a{position:relative;padding:4px 0;}
+.navlinks a::after{content:'';position:absolute;left:0;bottom:-2px;width:0;height:2px;background:var(--gold2);transition:width .25s;}
+.navlinks a:hover{color:var(--gold2);}
+.navlinks a:hover::after{width:100%;}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#171205;font-weight:700;padding:11px 22px;border-radius:8px;border:none;cursor:pointer;font-family:'Poppins',sans-serif;font-size:14px;box-shadow:0 6px 18px rgba(201,162,75,.25);transition:transform .15s, box-shadow .15s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(201,162,75,.35);}
+.btn.outline{background:transparent;border:1px solid var(--gold);color:var(--gold2);box-shadow:none;}
+.btn.small{padding:7px 14px;font-size:12px;}
+.btn.danger{background:linear-gradient(135deg,#e05a5a,#b53c3c);color:#fff;box-shadow:0 6px 16px rgba(224,90,90,.25);}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted);box-shadow:none;}
+.hero{position:relative;background:
+    radial-gradient(ellipse at top,#2a2010,#0a0a0b 65%);
+  padding:110px 20px 80px;text-align:center;border-bottom:1px solid var(--line);overflow:hidden;}
+.hero::before{content:'✂';position:absolute;font-size:280px;color:rgba(201,162,75,.05);top:-60px;right:-40px;transform:rotate(20deg);}
+.pill{display:inline-block;border:1px solid var(--gold);color:var(--gold2);font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:20px;margin-bottom:18px;background:rgba(201,162,75,.06);}
+.hero h1{font-size:64px;margin:0 0 14px;color:var(--gold2);text-shadow:0 0 30px rgba(240,207,126,.2);position:relative;}
+.hero p{color:var(--muted);max-width:520px;margin:0 auto 30px;font-size:16px;position:relative;}
+.hero .ctas{position:relative;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+section{padding:70px 20px;border-bottom:1px solid var(--line);position:relative;}
+section h2{font-size:38px;text-align:center;color:var(--gold2);margin:0 0 6px;}
+.subtitle{text-align:center;color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:34px;}
+.grid{display:grid;gap:20px;max-width:1100px;margin:0 auto;}
+.g3{grid-template-columns:repeat(3,1fr);}
+@media(max-width:800px){.g3{grid-template-columns:1fr;} .hero h1{font-size:40px;} .hero::before{font-size:160px;} .navlinks{display:none;}}
+.card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:24px;transition:transform .2s, border-color .2s, box-shadow .2s;}
+.card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 14px 30px rgba(0,0,0,.4);}
+.card .icon{font-size:26px;margin-bottom:10px;}
+.card h3{margin:0 0 6px;font-size:23px;color:var(--gold2);}
+.card .price{color:var(--gold);font-weight:700;font-size:19px;}
+.barbero-pic{width:78px;height:78px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),#8a6c22);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:30px;color:#171205;margin-bottom:12px;box-shadow:0 8px 20px rgba(201,162,75,.3);}
+.turno-box{max-width:700px;margin:0 auto;}
+.now-card{background:linear-gradient(135deg,#2a2010,#1a1a1a);border:1px solid var(--gold);border-radius:14px;padding:26px;text-align:center;margin-bottom:22px;box-shadow:0 0 30px rgba(201,162,75,.08);}
+.now-card .tag{color:var(--gold);font-size:12px;letter-spacing:3px;text-transform:uppercase;}
+.now-card .name{font-family:'Bebas Neue';font-size:38px;margin:8px 0;letter-spacing:1px;}
+.queue-item{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 18px;margin-bottom:8px;transition:border-color .2s;}
+.queue-item:hover{border-color:var(--gold);}
+.queue-item .pos{color:var(--gold);font-weight:700;margin-right:10px;}
+.empty{color:var(--muted);text-align:center;padding:20px;font-size:14px;}
+form{max-width:500px;margin:0 auto;display:grid;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px;}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase;}
+input,select{width:100%;padding:12px 13px;border-radius:8px;border:1px solid var(--line);background:#141414;color:var(--text);font-family:inherit;font-size:14px;transition:border-color .2s;}
+input:focus,select:focus{outline:none;border-color:var(--gold);}
+.msg{text-align:center;font-size:14px;padding:9px;border-radius:8px;margin-top:6px;}
+.msg.ok{background:#123a24;color:var(--ok);}
+.msg.err{background:#3a1414;color:var(--err);}
+footer{padding:34px 20px;text-align:center;color:var(--muted);font-size:13px;}
+footer .brand{font-size:22px;color:var(--gold2);display:block;margin-bottom:6px;}
+.admin-link{position:fixed;bottom:14px;right:14px;font-size:11px;color:#3a3a3a;z-index:40;}
+/* Admin */
+#adminView{display:none;min-height:100vh;background:var(--bg);}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+.login-card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--gold);border-radius:14px;padding:36px;width:100%;max-width:360px;box-shadow:0 20px 50px rgba(0,0,0,.5);}
+.login-card h2{margin-top:0;font-size:30px;color:var(--gold2);}
+.dash-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px;background:rgba(201,162,75,.03);}
+.dash-wrap{padding:24px 20px 60px;max-width:1000px;margin:0 auto;}
+.dash-wrap h3{color:var(--gold2);font-size:22px;margin:28px 0 14px;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:10px;}
+@media(max-width:700px){.stat-row{grid-template-columns:1fr;}}
+.stat{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;}
+.stat .num{font-family:'Bebas Neue';font-size:34px;color:var(--gold2);}
+.stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.turn-panel{background:linear-gradient(135deg,#2a2010,#1a1a1a);border:1px solid var(--gold);border-radius:14px;padding:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:6px;}
+.turn-panel .tag{color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+.turn-panel .name{font-family:'Bebas Neue';font-size:30px;}
+.cita-row{display:grid;grid-template-columns:1fr 1fr auto auto;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:8px;font-size:13px;}
+@media(max-width:700px){.cita-row{grid-template-columns:1fr;}}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;display:inline-block;}
+.badge.pendiente{background:#3a3414;color:var(--warn);}
+.badge.en_curso{background:#123a24;color:var(--ok);}
+.badge.atendido{background:#222;color:var(--muted);}
+.tabbtns{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.tabbtn{background:#1c1c1c;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;transition:all .15s;}
+.tabbtn.active{background:var(--gold);color:#151206;border-color:var(--gold);}
+.manual-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;}
+@media(max-width:700px){.manual-form{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ================= PUBLIC SITE ================= -->
+<div id="publicView">
+<div class="polestrip"></div>
+<header>
+  <div class="nav">
+    <div class="brand">💈 WILITO<span> BARBER</span></div>
+    <div class="navlinks">
+      <a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#barberos">Barbero</a>
+      <a href="#turno">Turno en vivo</a><a href="#reservar">Reservar</a><a href="#contacto">Contacto</a>
+    </div>
+    <a href="#reservar" class="btn small">Reservar cupo</a>
+  </div>
+</header>
+
+<div class="hero" id="inicio">
+  <div class="pill">✂ Barbería en Barranquilla</div>
+  <h1>WILITO BARBER SHOP</h1>
+  <p>Estilo que se nota. Cortes de verdad, atención de barbero de toda la vida.</p>
+  <div class="ctas">
+    <a href="#reservar" class="btn">Reservar mi cupo</a>
+    <a href="#turno" class="btn outline">Ver turno en vivo</a>
+  </div>
+</div>
+
+<section id="servicios">
+  <h2>Servicios</h2>
+  <div class="subtitle">Precios claros, sin sorpresas</div>
+  <div class="grid g3" id="serviciosGrid"></div>
+</section>
+
+<section id="barberos">
+  <h2>Tu Barbero</h2>
+  <div class="subtitle">La mano que te va a dejar bien parado</div>
+  <div class="grid" id="barberosGrid" style="max-width:320px;"></div>
+</section>
+
+<section id="turno">
+  <h2>Turno en vivo</h2>
+  <div class="subtitle">Mira quién va y cuánto falta para tu turno</div>
+  <div class="turno-box">
+    <div id="nowServing"></div>
+    <h3 style="color:var(--muted);font-size:15px;text-align:center;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase;">Próximos en la fila</h3>
+    <div id="queueList"></div>
+  </div>
+</section>
+
+<section id="reservar">
+  <h2>Reservar cupo</h2>
+  <div class="subtitle">Toma menos de 1 minuto</div>
+  <form id="bookForm">
+    <div><label>Nombre completo</label><input required id="bkNombre" placeholder="Tu nombre"></div>
+    <div><label>Teléfono</label><input required id="bkTel" placeholder="300 000 0000"></div>
+    <div><label>Barbero</label><select id="bkBarbero" required></select></div>
+    <div><label>Servicio</label><select id="bkServicio" required></select></div>
+
+    <div>
+      <label>¿Cuándo vienes?</label>
+      <div class="tabbtns" style="margin-bottom:10px;">
+        <button type="button" class="tabbtn active" id="modoAgendadaBtn" onclick="setModo('agendada')">🕓 Para más tarde</button>
+        <button type="button" class="tabbtn" id="modoFilaBtn" onclick="setModo('fila')">🚶 Ya estoy en el local</button>
+      </div>
+    </div>
+
+    <div id="horaGroup">
+      <label>Hora aproximada</label>
+      <input id="bkHora" type="time">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+        <button type="button" class="btn ghost small" onclick="setHora('10:00')">10:00am</button>
+        <button type="button" class="btn ghost small" onclick="setHora('12:00')">12:00pm</button>
+        <button type="button" class="btn ghost small" onclick="setHora('14:00')">2:00pm</button>
+        <button type="button" class="btn ghost small" onclick="setHora('16:00')">4:00pm</button>
+        <button type="button" class="btn ghost small" onclick="setHora('18:00')">6:00pm</button>
+      </div>
+    </div>
+
+    <div id="filaGroup" style="display:none;">
+      <div class="msg ok" style="text-align:left;">Te vas a unir a la fila en el orden en que llegaste. Así va la fila ahora mismo:</div>
+      <div id="filaPreview" style="margin-top:10px;"></div>
+    </div>
+
+    <button class="btn" type="submit">Confirmar reserva</button>
+    <div id="bookMsg"></div>
+  </form>
+</section>
+
+<section id="contacto" style="text-align:center;">
+  <h2>Contacto</h2>
+  <p style="color:var(--muted);">📍 Barranquilla, Atlántico &nbsp;|&nbsp; 📞 300 000 0000</p>
+  <p style="color:var(--muted);">Lun - Sáb: 9:00am - 8:00pm</p>
+</section>
+
+<footer>
+  <span class="brand">WILITO</span>
+  © 2026 Wilito Barber Shop. Todos los derechos reservados.
+</footer>
+<a href="#" class="admin-link" onclick="showAdmin();return false;">admin</a>
+</div>
+
+<!-- ================= ADMIN ================= -->
+<div id="adminView">
+  <div id="loginBox" class="login-wrap">
+    <div class="login-card">
+      <h2 style="color:var(--gold2);">Panel WILITO</h2>
+      <p style="color:var(--muted);font-size:13px;margin-top:-8px;">Acceso solo para el equipo</p>
+      <div style="margin-bottom:12px;"><label>Usuario</label><input id="loginUser" placeholder="admin"></div>
+      <div style="margin-bottom:12px;"><label>Contraseña</label><input id="loginPass" type="password" placeholder="••••••••"></div>
+      <button class="btn" style="width:100%;" onclick="doLogin()">Iniciar sesión</button>
+      <div id="loginMsg"></div>
+      <p style="color:#555;font-size:11px;margin-top:16px;">Demo: usuario <b>wilito</b> / clave <b>wilito2026</b></p>
+      <p style="text-align:center;margin-top:10px;"><a href="#" onclick="hideAdmin();return false;" style="color:var(--muted);font-size:12px;">← Volver al sitio</a></p>
+    </div>
+  </div>
+
+  <div id="dashBox" style="display:none;">
+    <div class="dash-header">
+      <div class="brand" style="font-size:22px;">WILITO <span style="color:var(--muted);font-size:13px;font-family:Poppins;">/ panel</span></div>
+      <div>
+        <a href="#" onclick="hideAdmin();return false;" class="btn outline small">Ver sitio</a>
+        <button class="btn danger small" onclick="doLogout()">Salir</button>
+      </div>
+    </div>
+    <div class="dash-wrap">
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="statPend">0</div><div class="lbl">Pendientes</div></div>
+        <div class="stat"><div class="num" id="statAtendidos">0</div><div class="lbl">Atendidos hoy</div></div>
+        <div class="stat"><div class="num" id="statIngresos">$0</div><div class="lbl">Ingresos del día</div></div>
+      </div>
+
+      <h3>Turno actual</h3>
+      <div id="adminTurnPanel"></div>
+
+      <h3>Agregar cliente manual</h3>
+      <div class="manual-form">
+        <input id="mNombre" placeholder="Nombre">
+        <select id="mBarbero"></select>
+        <select id="mServicio"></select>
+        <button class="btn" onclick="addManual()">Agregar</button>
+      </div>
+
+      <div class="tabbtns">
+        <button class="tabbtn active" data-f="todos" onclick="setFilter('todos',this)">Todos</button>
+        <button class="tabbtn" data-f="pendiente" onclick="setFilter('pendiente',this)">Pendientes</button>
+        <button class="tabbtn" data-f="en_curso" onclick="setFilter('en_curso',this)">En curso</button>
+        <button class="tabbtn" data-f="atendido" onclick="setFilter('atendido',this)">Atendidos</button>
+      </div>
+      <div id="citasList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Datos base ---------- */
+const SERVICIOS = [
+  {id:'general',nombre:'Corte general',dur:'30 min',precio:15000},
+  {id:'ninos',nombre:'Corte niños',dur:'25 min',precio:10000},
+  {id:'combo',nombre:'Corte + barba',dur:'45 min',precio:20000},
+  {id:'cejas',nombre:'Cejas',dur:'10 min',precio:5000},
+  {id:'cerquillo',nombre:'Cerquillo',dur:'10 min',precio:5000},
+  {id:'barba',nombre:'Barba',dur:'20 min',precio:5000},
+];
+const BARBEROS = [
+  {id:'wilito',nombre:'Wilito',esp:'Fundador · Todos los estilos'},
+];
+/* ======================================================
+   CONFIGURA AQUÍ TU BASE DE DATOS (Supabase)
+   Pega tu Project URL y tu anon public key de Supabase
+   (Project Settings → API). Mientras estén vacíos, el
+   sitio sigue funcionando con guardado local de respaldo.
+====================================================== */
+const SUPABASE_URL = 'https://bbujbupbxmlbpkfoxgnd.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Ez-8mA-ZnV0CAnIdQ4a_Pg_hz_PH4Lz';
+let supa = null;
+if(SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20){
+  supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+let citas = []; // {id,nombre,tel,barbero,servicio,hora,tipo,estado,ts}
+let dbApi = null, unsub = null;
+let filtroActual = 'todos';
+
+/* ---------- Render estático ---------- */
+function fillSelect(sel,arr,labelFn){sel.innerHTML=arr.map(x=>`<option value="${x.id}">${labelFn(x)}</option>`).join('');}
+const SERVICE_ICONS = {general:'✂️',ninos:'🧒',combo:'💈',cejas:'👁️',cerquillo:'✨',barba:'🪒'};
+document.getElementById('serviciosGrid').innerHTML = SERVICIOS.map(s=>`
+  <div class="card"><div class="icon">${SERVICE_ICONS[s.id]||'✂️'}</div><h3>${s.nombre}</h3><p style="color:var(--muted);font-size:13px;">${s.dur}</p><div class="price">$${s.precio.toLocaleString('es-CO')}</div></div>`).join('');
+document.getElementById('barberosGrid').innerHTML = BARBEROS.map(b=>`
+  <div class="card"><div class="barbero-pic">${b.nombre[0]}</div><h3>${b.nombre}</h3><p style="color:var(--muted);font-size:13px;">${b.esp}</p></div>`).join('');
+fillSelect(document.getElementById('bkBarbero'),BARBEROS,b=>b.nombre);
+fillSelect(document.getElementById('bkServicio'),SERVICIOS,s=>s.nombre+' - $'+s.precio.toLocaleString('es-CO'));
+fillSelect(document.getElementById('mBarbero'),BARBEROS,b=>b.nombre);
+fillSelect(document.getElementById('mServicio'),SERVICIOS,s=>s.nombre);
+
+function nombreBarbero(id){return (BARBEROS.find(b=>b.id===id)||{}).nombre||id;}
+function servicioInfo(id){return SERVICIOS.find(s=>s.id===id)||{nombre:id,precio:0};}
+/* Orden real: los que están en fila se ordenan por hora de llegada (ts);
+   los agendados para más tarde se ordenan por la hora que eligieron. Así
+   se intercalan correctamente según a quién le toca primero. */
+function ordenClave(c){
+  if(c.tipo==='fila') return c.ts;
+  const [h,m] = (c.hora||'00:00').split(':').map(Number);
+  const d = new Date(c.ts); d.setHours(h||0,m||0,0,0);
+  return d.getTime();
+}
+function ordenarCola(arr){ return [...arr].sort((a,b)=>ordenClave(a)-ordenClave(b)); }
+
+/* ---------- Render dinámico turno público ---------- */
+function renderTurno(){
+  const pendientesYCurso = ordenarCola(citas.filter(c=>c.estado!=='atendido'));
+  const enCurso = pendientesYCurso.find(c=>c.estado==='en_curso');
+  const resto = pendientesYCurso.filter(c=>c.id!== (enCurso&&enCurso.id));
+  const now = document.getElementById('nowServing');
+  now.innerHTML = enCurso ? `
+    <div class="now-card"><div class="tag">Atendiendo ahora</div>
+    <div class="name">${enCurso.nombre}</div>
+    <div style="color:var(--muted);font-size:13px;">con ${nombreBarbero(enCurso.barbero)} · ${servicioInfo(enCurso.servicio).nombre}</div></div>`
+    : `<div class="now-card"><div class="tag">Turno en vivo</div><div style="color:var(--muted);padding:10px 0;">Nadie en silla por ahora</div></div>`;
+  const q = document.getElementById('queueList');
+  q.innerHTML = resto.length ? resto.map((c,i)=>`
+    <div class="queue-item"><div><span class="pos">${i+1}.</span>${c.nombre} <span style="color:var(--muted);font-size:12px;">· ${c.tipo==='fila'?'🚶 en fila':'🕓 '+c.hora}</span></div><div style="color:var(--muted);font-size:12px;">${c.tipo==='fila'?'':c.hora}</div></div>`).join('')
+    : `<div class="empty">No hay nadie más en la fila.</div>`;
+  renderFilaPreview(resto);
+}
+function renderFilaPreview(resto){
+  const el = document.getElementById('filaPreview');
+  if(!el) return;
+  el.innerHTML = resto.length ? resto.map((c,i)=>`<div class="queue-item"><div><span class="pos">${i+1}.</span>${c.nombre}</div><div style="color:var(--muted);font-size:12px;">${c.tipo==='fila'?'en fila':c.hora}</div></div>`).join('')
+    : `<div class="empty">La fila está vacía, ¡serías el primero!</div>`;
+}
+
+/* ---------- Render dashboard admin ---------- */
+function renderDash(){
+  const hoy = citas;
+  document.getElementById('statPend').textContent = hoy.filter(c=>c.estado==='pendiente').length;
+  const atendidos = hoy.filter(c=>c.estado==='atendido');
+  document.getElementById('statAtendidos').textContent = atendidos.length;
+  const ingresos = atendidos.reduce((s,c)=>s+servicioInfo(c.servicio).precio,0);
+  document.getElementById('statIngresos').textContent = '$'+ingresos.toLocaleString('es-CO');
+
+  const pendYCurso = ordenarCola(hoy.filter(c=>c.estado!=='atendido'));
+  const enCurso = pendYCurso.find(c=>c.estado==='en_curso');
+  const hayPendientes = pendYCurso.some(c=>c.estado==='pendiente');
+  const panel = document.getElementById('adminTurnPanel');
+  if(enCurso){
+    panel.innerHTML = `<div class="turn-panel">
+      <div><div class="tag">Atendiendo ahora</div><div class="name">${enCurso.nombre}</div>
+      <div style="color:var(--muted);font-size:13px;">${servicioInfo(enCurso.servicio).nombre}</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" onclick="siguienteTurno()">${hayPendientes?'Finalizar y pasar siguiente ▸':'Finalizar'}</button>
+        <button class="btn ghost small" onclick="eliminarCita('${enCurso.id}')">Quitar</button>
+      </div></div>`;
+  } else {
+    const proximo = pendYCurso.find(c=>c.estado==='pendiente');
+    panel.innerHTML = proximo ? `<div class="turn-panel">
+      <div><div class="tag">Nadie en la silla</div><div class="name">Siguiente: ${proximo.nombre}</div></div>
+      <button class="btn" onclick="siguienteTurno()">Poner el siguiente ▸</button></div>`
+      : `<div class="turn-panel"><div><div class="tag">Turno actual</div><div class="name" style="color:var(--muted);font-size:20px;">Sin clientes en fila</div></div></div>`;
+  }
+
+  const list = filtroActual==='todos'?hoy:hoy.filter(c=>c.estado===filtroActual);
+  const ordered = [...list].sort((a,b)=>b.ts-a.ts);
+  document.getElementById('citasList').innerHTML = ordered.length ? ordered.map(c=>`
+    <div class="cita-row">
+      <div><b>${c.nombre}</b><br><span style="color:var(--muted);">${c.tel||'—'}</span></div>
+      <div>${servicioInfo(c.servicio).nombre}<br><span style="color:var(--muted);">${c.tipo==='fila'?'🚶 en fila':'🕓 '+c.hora}</span></div>
+      <div><span class="badge ${c.estado}">${c.estado.replace('_',' ')}</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        ${c.estado==='pendiente'?`<button class="btn small" onclick="cambiarEstado('${c.id}','en_curso')">Atender</button>`:''}
+        ${c.estado==='en_curso'?`<button class="btn small" onclick="cambiarEstado('${c.id}','atendido')">Finalizar</button>`:''}
+        <button class="btn ghost small" onclick="eliminarCita('${c.id}')">Quitar</button>
+      </div>
+    </div>`).join('') : `<div class="empty">No hay citas en este filtro.</div>`;
+}
+
+function renderAll(){renderTurno();renderDash();}
+
+/* ---------- Persistencia: Supabase (tiempo real) con respaldos ---------- */
+async function cargarDesdeSupabase(){
+  const {data, error} = await supa.from('citas').select('*');
+  if(!error){ citas = data; renderAll(); }
+}
+async function initDb(){
+  if(supa){
+    await cargarDesdeSupabase();
+    supa.channel('citas-realtime')
+      .on('postgres_changes', {event:'*', schema:'public', table:'citas'}, cargarDesdeSupabase)
+      .subscribe();
+    return;
+  }
+  try{ dbApi = await claude.use('db'); }catch(e){ dbApi = null; }
+  if(dbApi){
+    unsub = dbApi.collection('citas').onSnapshot(snap=>{
+      citas = snap.docs.map(d=>({id:d.id,...d.data}));
+      renderAll();
+    });
+  } else {
+    citas = JSON.parse(localStorage.getItem('wilito_citas')||'[]');
+    renderAll();
+  }
+}
+function persistLocal(){ try{ localStorage.setItem('wilito_citas', JSON.stringify(citas)); }catch(e){} }
+
+async function crearCita(data){
+  const id = 'c'+Date.now()+Math.random().toString(36).slice(2,6);
+  const doc = {...data, estado:'pendiente', ts:Date.now()};
+  if(supa){
+    await supa.from('citas').insert({id,...doc});
+  } else if(dbApi){
+    await dbApi.collection('citas').doc(id).set(doc);
+  } else {
+    citas.push({id,...doc}); persistLocal(); renderAll();
+  }
+}
+async function cambiarEstado(id,estado){
+  if(supa){
+    await supa.from('citas').update({estado}).eq('id',id);
+  } else if(dbApi){
+    await dbApi.collection('citas').doc(id).update({estado});
+  } else {
+    const c = citas.find(x=>x.id===id); if(c){c.estado=estado; persistLocal(); renderAll();}
+  }
+}
+async function eliminarCita(id){
+  if(supa){
+    await supa.from('citas').delete().eq('id',id);
+  } else if(dbApi){
+    await dbApi.collection('citas').doc(id).delete();
+  } else {
+    citas = citas.filter(c=>c.id!==id); persistLocal(); renderAll();
+  }
+}
+async function siguienteTurno(){
+  const pendYCurso = ordenarCola(citas.filter(c=>c.estado!=='atendido'));
+  const enCurso = pendYCurso.find(c=>c.estado==='en_curso');
+  if(enCurso) await cambiarEstado(enCurso.id,'atendido');
+  const siguiente = pendYCurso.find(c=>c.estado==='pendiente');
+  if(siguiente) await cambiarEstado(siguiente.id,'en_curso');
+}
+
+/* ---------- Formularios ---------- */
+let modoActual = 'agendada';
+function setModo(m){
+  modoActual = m;
+  document.getElementById('modoAgendadaBtn').classList.toggle('active', m==='agendada');
+  document.getElementById('modoFilaBtn').classList.toggle('active', m==='fila');
+  document.getElementById('horaGroup').style.display = m==='agendada' ? 'block':'none';
+  document.getElementById('filaGroup').style.display = m==='fila' ? 'block':'none';
+  document.getElementById('bkHora').required = (m==='agendada');
+  if(m==='fila') renderFilaPreview(ordenarCola(citas.filter(c=>c.estado==='pendiente')));
+}
+function setHora(v){ document.getElementById('bkHora').value = v; }
+
+document.getElementById('bookForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const barbero = document.getElementById('bkBarbero').value;
+  const msg = document.getElementById('bookMsg');
+  let hora;
+  if(modoActual==='agendada'){
+    hora = document.getElementById('bkHora').value;
+    if(!hora){ msg.className='msg err'; msg.textContent='Elige una hora para tu cita.'; return; }
+    const dup = citas.some(c=>c.barbero===barbero && c.hora===hora && c.tipo==='agendada' && c.estado!=='atendido');
+    if(dup){ msg.className='msg err'; msg.textContent='Ese horario ya está ocupado, elige otra hora.'; return; }
+  } else {
+    const now = new Date();
+    hora = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  }
+  await crearCita({
+    nombre:document.getElementById('bkNombre').value,
+    tel:document.getElementById('bkTel').value,
+    barbero, servicio:document.getElementById('bkServicio').value, hora, tipo:modoActual
+  });
+  msg.className='msg ok'; msg.textContent= modoActual==='fila' ? '¡Listo! Ya estás en la fila, mira tu turno en "Turno en vivo".' : '¡Cupo reservado! Te esperamos en WILITO.';
+  e.target.reset();
+  setModo('agendada');
+});
+
+function addManual(){
+  const nombre = document.getElementById('mNombre').value.trim();
+  if(!nombre) return;
+  const now = new Date(); const hora = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  crearCita({nombre,tel:'',barbero:document.getElementById('mBarbero').value,servicio:document.getElementById('mServicio').value,hora,tipo:'fila'});
+  document.getElementById('mNombre').value='';
+}
+function setFilter(f,btn){filtroActual=f; document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderDash();}
+
+/* ---------- Admin login (demo, sin backend real) ---------- */
+function showAdmin(){
+  document.getElementById('publicView').style.display='none';
+  document.getElementById('adminView').style.display='block';
+  if(sessionStorage.getItem('wilito_admin')==='1'){ document.getElementById('loginBox').style.display='none'; document.getElementById('dashBox').style.display='block'; renderDash(); }
+}
+function hideAdmin(){
+  document.getElementById('adminView').style.display='none';
+  document.getElementById('publicView').style.display='block';
+}
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const msg = document.getElementById('loginMsg');
+  if(u==='wilito' && p==='wilito2026'){
+    sessionStorage.setItem('wilito_admin','1');
+    document.getElementById('loginBox').style.display='none';
+    document.getElementById('dashBox').style.display='block';
+    renderDash();
+  } else { msg.className='msg err'; msg.textContent='Usuario o contraseña incorrectos.'; }
+}
+function doLogout(){ sessionStorage.removeItem('wilito_admin'); document.getElementById('dashBox').style.display='none'; document.getElementById('loginBox').style.display='flex'; }
+
+initDb();
+</script>
+</body>
+</html>

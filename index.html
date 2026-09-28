@@ -106,6 +106,59 @@ footer .brand{font-size:22px;color:var(--gold2);display:block;margin-bottom:6px;
 .tabbtn.active{background:var(--gold);color:#151206;border-color:var(--gold);}
 .manual-form{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;}
 @media(max-width:700px){.manual-form{grid-template-columns:1fr 1fr;}}
+
+/* ===== Extras: decoración, pantalla de espera, contacto ===== */
+section h2::after{content:'';display:block;width:90px;height:3px;margin:12px auto 0;background:linear-gradient(90deg,transparent,var(--gold2),transparent);}
+.hero h1{background:linear-gradient(90deg,#b8902f,#fff3c4,#c9a24b,#fff3c4,#b8902f);background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;text-shadow:none;animation:shine 5s linear infinite;filter:drop-shadow(0 0 22px rgba(240,207,126,.25));}
+@keyframes shine{to{background-position:250% center;}}
+.float{position:absolute;font-size:48px;opacity:.14;animation:floaty 7s ease-in-out infinite;pointer-events:none;}
+.f1{left:8%;top:22%;}.f2{right:10%;bottom:18%;animation-delay:-3s;}.f3{left:14%;bottom:12%;animation-delay:-5s;font-size:36px;}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-22px) rotate(8deg);}}
+.pole{position:absolute;top:0;bottom:0;width:10px;background:repeating-linear-gradient(45deg,#c9394a 0 12px,#f4efe4 12px 24px,var(--gold) 24px 36px);background-size:50px 50px;animation:polev 2s linear infinite;opacity:.85;}
+.pl{left:0;}.pr{right:0;}
+@keyframes polev{to{background-position:0 50px;}}
+.livebadge{display:inline-flex;align-items:center;gap:9px;margin:0 auto 28px;padding:8px 18px;border-radius:30px;background:rgba(76,175,109,.1);border:1px solid rgba(76,175,109,.4);color:#8ae6ab;font-size:13px;position:relative;}
+.dot{width:9px;height:9px;border-radius:50%;background:#4caf6d;animation:ping 1.6s infinite;}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(76,175,109,.7);}70%,100%{box-shadow:0 0 0 10px rgba(76,175,109,0);}}
+.marquee{overflow:hidden;background:linear-gradient(90deg,#1b1508,#241c0b,#1b1508);border-bottom:1px solid var(--line);padding:14px 0;}
+.marquee-in{display:flex;width:max-content;gap:46px;animation:marq 34s linear infinite;font-family:'Bebas Neue';font-size:22px;letter-spacing:2px;color:var(--gold2);white-space:nowrap;}
+@keyframes marq{to{transform:translateX(-50%);}}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
+@keyframes glow{50%{box-shadow:0 0 42px rgba(201,162,75,.3);}}
+.now-card{animation:glow 3s ease-in-out infinite;}
+.wa{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:56px;height:56px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;font-size:28px;z-index:60;animation:ping2 2.4s infinite;}
+@keyframes ping2{0%{box-shadow:0 0 0 0 rgba(37,211,102,.6);}70%,100%{box-shadow:0 0 0 16px rgba(37,211,102,0);}}
+body[data-view="admin"] .wa,body[data-view="wait"] .wa{display:none;}
+@media(max-width:520px){.hide-sm{display:none!important;}.brand{font-size:24px;}}
+#waitView{position:relative;min-height:100vh;overflow:hidden;padding:26px 34px 96px 44px;background:#070708;}
+.wait-bg span{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(110px);opacity:.28;animation:orb 14s ease-in-out infinite;}
+.wait-bg span:nth-child(1){background:#c9a24b;top:-160px;left:-120px;}
+.wait-bg span:nth-child(2){background:#c9394a;bottom:-200px;right:-100px;animation-delay:-5s;opacity:.18;}
+.wait-bg span:nth-child(3){background:#8a6c22;top:40%;left:45%;animation-delay:-9s;opacity:.15;}
+@keyframes orb{50%{transform:translate(60px,-40px) scale(1.15);}}
+.wait-pole{position:absolute;left:0;top:0;bottom:0;width:14px;background:repeating-linear-gradient(45deg,#c9394a 0 14px,#f4efe4 14px 28px,var(--gold) 28px 42px);background-size:60px 60px;animation:polev 2s linear infinite;}
+.wait-top{position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.wait-top .brand{font-size:clamp(24px,4vw,46px);}
+.wait-clock{font-family:'Bebas Neue';font-size:clamp(30px,5vw,58px);color:var(--gold2);letter-spacing:3px;}
+.wait-exit{position:absolute;right:14px;top:8px;font-size:12px;color:#444;z-index:5;}
+.w-grid{position:relative;display:grid;grid-template-columns:1.5fr 1fr;gap:26px;}
+@media(max-width:900px){.w-grid{grid-template-columns:1fr;}#waitView{padding:20px 18px 96px 28px;}}
+.w-tag{color:var(--gold);letter-spacing:5px;font-size:clamp(12px,1.4vw,18px);text-transform:uppercase;font-weight:600;}
+.w-now{background:linear-gradient(145deg,rgba(42,32,16,.85),rgba(20,20,20,.85));border:2px solid var(--line);border-radius:26px;padding:clamp(24px,4vw,56px);display:flex;flex-direction:column;justify-content:center;min-height:50vh;backdrop-filter:blur(8px);}
+.w-now.on{border-color:var(--gold2);animation:glow 2.6s ease-in-out infinite;}
+.w-name{font-family:'Bebas Neue';font-size:clamp(48px,10vw,150px);line-height:.95;margin:14px 0;color:#fff;text-shadow:0 0 40px rgba(240,207,126,.35);word-break:break-word;}
+.w-sub{color:var(--muted);font-size:clamp(15px,2vw,26px);}
+.w-side{display:flex;flex-direction:column;gap:20px;}
+.w-next{background:rgba(201,162,75,.1);border:1px solid var(--gold);border-radius:22px;padding:clamp(18px,2.5vw,32px);}
+.w-name2{font-family:'Bebas Neue';font-size:clamp(38px,6vw,84px);color:var(--gold2);line-height:1;margin-top:8px;word-break:break-word;}
+.w-list{background:rgba(26,26,26,.8);border:1px solid var(--line);border-radius:22px;padding:clamp(16px,2vw,26px);flex:1;}
+.w-item{display:flex;gap:14px;align-items:baseline;font-size:clamp(18px,2.4vw,32px);padding:8px 0;border-bottom:1px solid #222;}
+.w-item b{color:var(--gold);font-family:'Bebas Neue';font-size:1.2em;}
+.w-eta{text-align:center;font-size:clamp(15px,2vw,24px);color:var(--muted);}
+.w-eta b{color:var(--gold2);}
+.ticker{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(90deg,#c9a24b,#f0cf7e,#c9a24b);color:#171205;overflow:hidden;padding:12px 0;z-index:5;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));}
+.ticker-in{display:flex;width:max-content;animation:marq 28s linear infinite;font-weight:700;font-size:clamp(14px,1.8vw,22px);white-space:nowrap;gap:60px;}
 </style>
 </head>
 <body>
@@ -120,20 +173,21 @@ footer .brand{font-size:22px;color:var(--gold2);display:block;margin-bottom:6px;
       <a href="#inicio">Inicio</a><a href="#servicios">Servicios</a><a href="#barberos">Barbero</a>
       <a href="#turno">Turno en vivo</a><a href="#reservar">Reservar</a><a href="#contacto">Contacto</a>
     </div>
-    <a href="#reservar" class="btn small">Reservar cupo</a>
+    <div style="display:flex;gap:8px;"><a href="#admin" class="btn outline small hide-sm">⚙ Admin</a><a href="#espera" class="btn outline small hide-sm">📺 Espera</a><a href="#reservar" class="btn small">Reservar cupo</a></div>
   </div>
 </header>
 
-<div class="hero" id="inicio">
-  <div class="pill">✂ Barbería en Barranquilla</div>
+<div class="hero" id="inicio"><div class="float f1">✂</div><div class="float f2">🪒</div><div class="float f3">💈</div><div class="pole pl"></div><div class="pole pr"></div>
+  <div class="pill">✂ Algarrobo · Barbería</div>
   <h1>WILITO BARBER SHOP</h1>
-  <p>Estilo que se nota. Cortes de verdad, atención de barbero de toda la vida.</p>
+  <p>Estilo que se nota. Cortes de verdad, atención de barbero de toda la vida.</p><div class="livebadge" id="heroLive"></div>
   <div class="ctas">
     <a href="#reservar" class="btn">Reservar mi cupo</a>
-    <a href="#turno" class="btn outline">Ver turno en vivo</a>
+    <a href="#turno" class="btn outline">Ver turno en vivo</a><a href="#espera" class="btn outline">📺 Pantalla de espera</a>
   </div>
 </div>
 
+<div class="marquee"><div class="marquee-in"></div></div>
 <section id="servicios">
   <h2>Servicios</h2>
   <div class="subtitle">Precios claros, sin sorpresas</div>
@@ -195,19 +249,32 @@ footer .brand{font-size:22px;color:var(--gold2);display:block;margin-bottom:6px;
   </form>
 </section>
 
-<section id="contacto" style="text-align:center;">
+<section id="contacto">
   <h2>Contacto</h2>
-  <p style="color:var(--muted);">📍 Barranquilla, Atlántico &nbsp;|&nbsp; 📞 300 000 0000</p>
-  <p style="color:var(--muted);">Lun - Sáb: 9:00am - 8:00pm</p>
+  <div class="subtitle">Estamos en Algarrobo, Magdalena</div>
+  <div class="grid g3">
+    <div class="card"><div class="icon">📍</div><h3>Ubicación</h3><p style="color:var(--muted);font-size:14px;">Algarrobo, Magdalena</p><a class="btn small" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Barber+Shop+Wilito+Algarrobo+Magdalena">Cómo llegar</a></div>
+    <div class="card"><div class="icon">📞</div><h3>Llámanos</h3><p style="color:var(--muted);font-size:14px;">320 755 6668</p><div style="display:flex;gap:8px;flex-wrap:wrap;"><a class="btn small" href="tel:+573207556668">Llamar</a><a class="btn outline small" target="_blank" rel="noopener" href="https://wa.me/573207556668?text=Hola%20Wilito%2C%20quiero%20reservar">WhatsApp</a></div></div>
+    <div class="card"><div class="icon">🕘</div><h3>Horario</h3><p style="color:var(--muted);font-size:14px;">Lun - Sáb<br>9:00am - 8:00pm</p></div>
+  </div>
 </section>
 
 <footer>
-  <span class="brand">WILITO</span>
+  <span class="brand" id="footBrand">WILITO</span><div style="margin-bottom:8px;">📍 Algarrobo, Magdalena &nbsp;·&nbsp; 📞 320 755 6668</div><a href="#admin" class="btn outline small" style="margin:4px 0 12px;">⚙ Panel admin</a><br>
   © 2026 Wilito Barber Shop. Todos los derechos reservados.
 </footer>
-<a href="#" class="admin-link" onclick="showAdmin();return false;">admin</a>
+
 </div>
 
+<a class="wa" href="https://wa.me/573207556668?text=Hola%20Wilito%2C%20quiero%20reservar" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+<div id="waitView" style="display:none;">
+  <div class="wait-bg"><span></span><span></span><span></span></div>
+  <div class="wait-pole"></div>
+  <a href="#" class="wait-exit" onclick="hideAdmin();return false;">✕ salir</a>
+  <div class="wait-top"><div class="brand">💈 WILITO<span> BARBER SHOP</span></div><div class="wait-clock" id="waitClock"></div></div>
+  <div id="waitBody"></div>
+  <div class="ticker"><div class="ticker-in"></div></div>
+</div>
 <!-- ================= ADMIN ================= -->
 <div id="adminView">
   <div id="loginBox" class="login-wrap">
@@ -227,7 +294,7 @@ footer .brand{font-size:22px;color:var(--gold2);display:block;margin-bottom:6px;
     <div class="dash-header">
       <div class="brand" style="font-size:22px;">WILITO <span style="color:var(--muted);font-size:13px;font-family:Poppins;">/ panel</span></div>
       <div>
-        <a href="#" onclick="hideAdmin();return false;" class="btn outline small">Ver sitio</a>
+        <a href="#espera" class="btn outline small">📺 Pantalla de espera</a> <a href="#" onclick="hideAdmin();return false;" class="btn outline small">Ver sitio</a>
         <button class="btn danger small" onclick="doLogout()">Salir</button>
       </div>
     </div>
@@ -323,19 +390,19 @@ function renderTurno(){
   const now = document.getElementById('nowServing');
   now.innerHTML = enCurso ? `
     <div class="now-card"><div class="tag">Atendiendo ahora</div>
-    <div class="name">${enCurso.nombre}</div>
+    <div class="name">${esc(enCurso.nombre)}</div>
     <div style="color:var(--muted);font-size:13px;">con ${nombreBarbero(enCurso.barbero)} · ${servicioInfo(enCurso.servicio).nombre}</div></div>`
     : `<div class="now-card"><div class="tag">Turno en vivo</div><div style="color:var(--muted);padding:10px 0;">Nadie en silla por ahora</div></div>`;
   const q = document.getElementById('queueList');
   q.innerHTML = resto.length ? resto.map((c,i)=>`
-    <div class="queue-item"><div><span class="pos">${i+1}.</span>${c.nombre} <span style="color:var(--muted);font-size:12px;">· ${c.tipo==='fila'?'🚶 en fila':'🕓 '+c.hora}</span></div><div style="color:var(--muted);font-size:12px;">${c.tipo==='fila'?'':c.hora}</div></div>`).join('')
+    <div class="queue-item"><div><span class="pos">${i+1}.</span>${esc(c.nombre)} <span style="color:var(--muted);font-size:12px;">· ${c.tipo==='fila'?'🚶 en fila':'🕓 '+esc(c.hora)}</span></div><div style="color:var(--muted);font-size:12px;">${c.tipo==='fila'?'':esc(c.hora)}</div></div>`).join('')
     : `<div class="empty">No hay nadie más en la fila.</div>`;
   renderFilaPreview(resto);
 }
 function renderFilaPreview(resto){
   const el = document.getElementById('filaPreview');
   if(!el) return;
-  el.innerHTML = resto.length ? resto.map((c,i)=>`<div class="queue-item"><div><span class="pos">${i+1}.</span>${c.nombre}</div><div style="color:var(--muted);font-size:12px;">${c.tipo==='fila'?'en fila':c.hora}</div></div>`).join('')
+  el.innerHTML = resto.length ? resto.map((c,i)=>`<div class="queue-item"><div><span class="pos">${i+1}.</span>${esc(c.nombre)}</div><div style="color:var(--muted);font-size:12px;">${c.tipo==='fila'?'en fila':esc(c.hora)}</div></div>`).join('')
     : `<div class="empty">La fila está vacía, ¡serías el primero!</div>`;
 }
 
@@ -354,7 +421,7 @@ function renderDash(){
   const panel = document.getElementById('adminTurnPanel');
   if(enCurso){
     panel.innerHTML = `<div class="turn-panel">
-      <div><div class="tag">Atendiendo ahora</div><div class="name">${enCurso.nombre}</div>
+      <div><div class="tag">Atendiendo ahora</div><div class="name">${esc(enCurso.nombre)}</div>
       <div style="color:var(--muted);font-size:13px;">${servicioInfo(enCurso.servicio).nombre}</div></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn" onclick="siguienteTurno()">${hayPendientes?'Finalizar y pasar siguiente ▸':'Finalizar'}</button>
@@ -363,7 +430,7 @@ function renderDash(){
   } else {
     const proximo = pendYCurso.find(c=>c.estado==='pendiente');
     panel.innerHTML = proximo ? `<div class="turn-panel">
-      <div><div class="tag">Nadie en la silla</div><div class="name">Siguiente: ${proximo.nombre}</div></div>
+      <div><div class="tag">Nadie en la silla</div><div class="name">Siguiente: ${esc(proximo.nombre)}</div></div>
       <button class="btn" onclick="siguienteTurno()">Poner el siguiente ▸</button></div>`
       : `<div class="turn-panel"><div><div class="tag">Turno actual</div><div class="name" style="color:var(--muted);font-size:20px;">Sin clientes en fila</div></div></div>`;
   }
@@ -372,8 +439,8 @@ function renderDash(){
   const ordered = [...list].sort((a,b)=>b.ts-a.ts);
   document.getElementById('citasList').innerHTML = ordered.length ? ordered.map(c=>`
     <div class="cita-row">
-      <div><b>${c.nombre}</b><br><span style="color:var(--muted);">${c.tel||'—'}</span></div>
-      <div>${servicioInfo(c.servicio).nombre}<br><span style="color:var(--muted);">${c.tipo==='fila'?'🚶 en fila':'🕓 '+c.hora}</span></div>
+      <div><b>${esc(c.nombre)}</b><br><span style="color:var(--muted);">${esc(c.tel||'—')}</span></div>
+      <div>${servicioInfo(c.servicio).nombre}<br><span style="color:var(--muted);">${c.tipo==='fila'?'🚶 en fila':'🕓 '+esc(c.hora)}</span></div>
       <div><span class="badge ${c.estado}">${c.estado.replace('_',' ')}</span></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
         ${c.estado==='pendiente'?`<button class="btn small" onclick="cambiarEstado('${c.id}','en_curso')">Atender</button>`:''}
@@ -383,12 +450,12 @@ function renderDash(){
     </div>`).join('') : `<div class="empty">No hay citas en este filtro.</div>`;
 }
 
-function renderAll(){renderTurno();renderDash();}
+function renderAll(){renderTurno();renderDash();renderEspera();renderHeroLive();}
 
 /* ---------- Persistencia: Supabase (tiempo real) con respaldos ---------- */
 async function cargarDesdeSupabase(){
   const {data, error} = await supa.from('citas').select('*');
-  if(!error){ citas = data; renderAll(); }
+  if(!error){ citas = data.filter(r=>/^[\w-]+$/.test(r.id)); renderAll(); }
 }
 async function initDb(){
   if(supa){
@@ -480,7 +547,7 @@ document.getElementById('bookForm').addEventListener('submit', async e=>{
     tel:document.getElementById('bkTel').value,
     barbero, servicio:document.getElementById('bkServicio').value, hora, tipo:modoActual
   });
-  msg.className='msg ok'; msg.textContent= modoActual==='fila' ? '¡Listo! Ya estás en la fila, mira tu turno en "Turno en vivo".' : '¡Cupo reservado! Te esperamos en WILITO.';
+  msg.className='msg ok'; msg.innerHTML= modoActual==='fila' ? '¡Listo! Ya estás en la fila. <a href="#espera" style="text-decoration:underline;">Ver pantalla de espera</a>' : '¡Cupo reservado! Te esperamos en WILITO.';
   e.target.reset();
   setModo('agendada');
 });
@@ -494,30 +561,64 @@ function addManual(){
 }
 function setFilter(f,btn){filtroActual=f; document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderDash();}
 
-/* ---------- Admin login (demo, sin backend real) ---------- */
-function showAdmin(){
-  document.getElementById('publicView').style.display='none';
-  document.getElementById('adminView').style.display='block';
-  if(sessionStorage.getItem('wilito_admin')==='1'){ document.getElementById('loginBox').style.display='none'; document.getElementById('dashBox').style.display='block'; renderDash(); }
+/* ---------- Vistas: público / admin (sin clave) / pantalla de espera ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+let waitTimer=null;
+function setView(v){
+  document.getElementById('publicView').style.display = v==='public'?'block':'none';
+  document.getElementById('adminView').style.display = v==='admin'?'block':'none';
+  document.getElementById('waitView').style.display = v==='wait'?'block':'none';
+  document.body.dataset.view=v;
+  clearInterval(waitTimer);
+  if(v==='admin'){ document.getElementById('loginBox').style.display='none'; document.getElementById('dashBox').style.display='block'; renderDash(); }
+  if(v==='wait'){ tickClock(); waitTimer=setInterval(tickClock,20000); renderEspera(); }
 }
-function hideAdmin(){
-  document.getElementById('adminView').style.display='none';
-  document.getElementById('publicView').style.display='block';
+function tickClock(){ const el=document.getElementById('waitClock'); if(el) el.textContent=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}); }
+function route(){ const h=location.hash; setView(h==='#admin'?'admin':h==='#espera'?'wait':'public'); }
+function showAdmin(){ location.hash='#admin'; }
+function hideAdmin(){ history.replaceState(null,'',location.pathname+location.search); setView('public'); window.scrollTo(0,0); }
+function doLogout(){ hideAdmin(); }
+window.addEventListener('hashchange',route);
+
+function renderEspera(){
+  const el=document.getElementById('waitBody'); if(!el) return;
+  const cola=ordenarCola(citas.filter(c=>c.estado!=='atendido'));
+  const now=cola.find(c=>c.estado==='en_curso');
+  const resto=cola.filter(c=>!now||c.id!==now.id);
+  const sig=resto[0], otros=resto.slice(1,7);
+  el.innerHTML=`<div class="w-grid">
+    <div class="w-now ${now?'on':''}">
+      <div class="w-tag">${now?'✂ En la silla ahora':'Silla libre'}</div>
+      <div class="w-name">${now?esc(now.nombre):'¡Ven, te esperamos!'}</div>
+      <div class="w-sub">${now?esc(servicioInfo(now.servicio).nombre):'Nadie en la silla en este momento'}</div>
+    </div>
+    <div class="w-side">
+      <div class="w-next"><div class="w-tag">Sigue</div><div class="w-name2">${sig?esc(sig.nombre):'—'}</div></div>
+      <div class="w-list"><div class="w-tag">En fila (${resto.length})</div>
+        ${otros.length?otros.map((c,i)=>`<div class="w-item"><b>${i+2}</b><span>${esc(c.nombre)}</span></div>`).join(''):'<div class="w-sub" style="padding-top:10px;">Nadie más en la fila</div>'}
+      </div>
+      <div class="w-eta">⏱ Espera aprox. <b>${resto.length*20} min</b></div>
+    </div></div>`;
 }
-function doLogin(){
-  const u = document.getElementById('loginUser').value.trim();
-  const p = document.getElementById('loginPass').value;
-  const msg = document.getElementById('loginMsg');
-  if(u==='wilito' && p==='wilito2026'){
-    sessionStorage.setItem('wilito_admin','1');
-    document.getElementById('loginBox').style.display='none';
-    document.getElementById('dashBox').style.display='block';
-    renderDash();
-  } else { msg.className='msg err'; msg.textContent='Usuario o contraseña incorrectos.'; }
+function renderHeroLive(){
+  const lb=document.getElementById('heroLive'); if(!lb) return;
+  const act=citas.filter(c=>c.estado!=='atendido'), cur=act.some(c=>c.estado==='en_curso');
+  lb.innerHTML='<span class="dot"></span>'+(act.length?`${act.length} en fila ahora · ${cur?'silla ocupada':'silla libre'}`:'Sin fila · ¡ven sin espera!');
 }
-function doLogout(){ sessionStorage.removeItem('wilito_admin'); document.getElementById('dashBox').style.display='none'; document.getElementById('loginBox').style.display='flex'; }
+
+/* decoración: cinta de servicios, ticker y aparición al hacer scroll */
+document.querySelector('.marquee-in').innerHTML=SERVICIOS.map(s=>`<span>✂ ${s.nombre.toUpperCase()} · $${s.precio.toLocaleString('es-CO')}</span>`).join('').repeat(4);
+const tk='<span>📞 Reserva al 320 755 6668</span><span>📍 Algarrobo, Magdalena</span><span>💈 WILITO BARBER SHOP · Estilo que se nota</span>'+SERVICIOS.map(s=>`<span>✂ ${s.nombre} $${s.precio.toLocaleString('es-CO')}</span>`).join('');
+document.querySelector('.ticker-in').innerHTML=tk+tk;
+let fc=0,ft=null;
+document.getElementById('footBrand').addEventListener('click',()=>{fc++;clearTimeout(ft);ft=setTimeout(()=>{fc=0;},900);if(fc>=3){fc=0;showAdmin();}});
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{threshold:.12});
+  document.querySelectorAll('.card,section h2,.subtitle,#bookForm').forEach(el=>{el.classList.add('reveal');io.observe(el);});
+}
 
 initDb();
+route();
 </script>
 </body>
 </html>
